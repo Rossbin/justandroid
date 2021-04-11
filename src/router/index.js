@@ -5,9 +5,9 @@ import Router from 'vue-router'
 let Index = resolve => require(['@/views/index/index'], resolve)
 let Home = resolve => require(['@/views/index/home'], resolve)
 let Course = resolve => require(['@/views/index/course'], resolve)
-let Path = resolve => require(['@/views/index/path'], resolve)
+// let Path = resolve => require(['@/views/index/path'], resolve)
 let Coding = resolve => require(['@/views/index/coding'], resolve)
-let Article = resolve => require(['@/views/index/article'], resolve)
+// let Article = resolve => require(['@/views/index/article'], resolve)
 let Wenda = resolve => require(['@/views/index/wenda'], resolve)
 
 // 详情
@@ -48,27 +48,31 @@ let routes = [{
       path: '/index/course',
       component: Course,
       meta: {
-        title: '慕课网'
+        title: '基础课程'
       },
-    }, {
-      path: '/index/path',
-      component: Path,
-      meta: {
-        title: '慕课网'
-      },
-    }, {
+    },
+    //  {
+    //   path: '/index/path',
+    //   component: Path,
+    //   meta: {
+    //     title: '实战课'
+    //   },
+    // },
+     {
       path: '/index/coding',
       component: Coding,
       meta: {
         title: '慕课网'
       },
-    }, {
-      path: '/index/article',
-      component: Article,
-      meta: {
-        title: '慕课网'
-      },
-    }, {
+    },
+    //  {
+    //   path: '/index/article',
+    //   component: Article,
+    //   meta: {
+    //     title: '慕课网'
+    //   },
+    // },
+     {
       path: '/index/wenda',
       component: Wenda,
       meta: {

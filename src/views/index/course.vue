@@ -3,12 +3,14 @@
     <!-- 菜单列表 -->
     <div class="wrapper menu-wrapper" ref="mwrapper">
       <ul class="menu-list">
-        <li class="menu-item imooc-flex imooc-flex-center"
-          v-for="(course, index) in courselist"
-          :key="course.id"
-          :class="{'active': currentIndex == index}"
-          @click="selectMenu(index)">
-          <span>{{ course.title }}</span>
+        <li
+          class="menu-item imooc-flex imooc-flex-center"
+          v-for="(categroy, index) in general_category_list"
+          :key="categroy.id"
+          :class="{ active: currentIndex == index }"
+          @click="selectMenu(index)"
+        >
+          <span>{{ categroy.name }}</span>
         </li>
       </ul>
     </div>
@@ -16,19 +18,33 @@
     <!-- 对应的内容 -->
     <div class="wrapper content-wrapper" ref="cwrapper">
       <ul class="content-list">
-        <li class="content-item" v-for="course in courselist" :key="course.id">
-          <div class="title mb-10">{{ course.title }}</div>
-          <ul class="type-list imooc-flex" v-if="course.content.typelist.length">
-            <li class="type-item" v-for="(type, index) in course.content.typelist" :key="type.id" @click="toDetail(index)">
-              <div class="icon">
-                <img :src="type.icon">
-                <p class="hide-text-1">{{ type.text }}</p>
-              </div>
-            </li>
+        <li
+          class="content-item"
+          v-for="course in general_category_list"
+          :key="course.id"
+        >
+          <div class="title mb-10">{{ course.name }}</div>
+
+          <ul
+            class="type-list imooc-flex"
+            v-if="course.coursecategrories.length"
+          >
           </ul>
-          <ul class="course-list">
-            <li class="course-item imooc-flex" v-for="(course, index) in course.content.courselist" :key="course.id" @click="toDetail(index)">
-              <imooc-citem :course="course" width="6rem"></imooc-citem>
+
+
+
+          <ul
+            class="course-list "
+            v-for="(coursecate, index) in course.coursecategrories"
+            :key="index"
+          >
+            <li
+              class="course-item imooc-flex"
+              v-for="(courses, index) in coursecate.androidcourse_base_list"
+              :key="courses.id"
+              @click="toDetail(index)"
+            >
+              <imooc-citem :course="courses" width="10rem"></imooc-citem>
             </li>
           </ul>
         </li>
@@ -39,18 +55,20 @@
 
 <script>
 import BScroll from "better-scroll";
-import citem from "@/components/citem";
+import citem from "@/components/citemTwo";
 export default {
   data() {
     return {
+      general_category_list: [],
       courselist: [],
       mscroll: null,
       cscroll: null,
       scrollY: 0,
-      listHeight: []
+      listHeight: [],
     };
   },
   created() {
+    this.get_general();
     this.getCourseData();
   },
   mounted() {
@@ -65,57 +83,81 @@ export default {
     document.querySelector(".index").classList.add("haspadding");
   },
   methods: {
+    // 总目录
+    get_general() {
+      // 获取课程分类信息
+      this.$axios
+        .get("http://127.0.0.1:8000/course/androidcourse/")
+        .then((response) => {
+          this.general_category_list = response.data;
+          // console.log(this.general_category_list);
+        })
+        .catch(() => {
+          this.$message({
+            message: "获取总目录分类信息有误，请联系客服工作人员",
+          });
+        });
+    },
+
     getCourseData() {
-      this.$http.get("/courseData").then(res => {
+      this.$http.get("/courseData").then((res) => {
         console.log(res);
         let data = res.data.data;
         this.courselist = data.courselist;
       });
     },
     initBetterScroll() {
-      this.$nextTick(function() {
+      this.$nextTick(function () {
         setTimeout(() => {
           let wrapper = this.$refs.cwrapper;
 
           // 初始化better-scroll插件
           this.cscroll = new BScroll(wrapper, {
             click: true,
-            probeType: 3
+            probeType: 3,
           });
 
           // 监听内容区的滚动
-          this.cscroll.on("scroll", pos => {
+          this.cscroll.on("scroll", (pos) => {
             this.scrollY = Math.abs(Math.round(pos.y));
+
           });
 
           // 计算高度
           this.caclHeight();
-        }, 500);
+
+        }, 2000);
       });
     },
     caclHeight() {
       let content = document.querySelectorAll(".content-wrapper .content-item");
+      // console.log("content",content);
       let height = 0;
+
       this.listHeight.push(height);
-      content.forEach(item => {
-        height += item.clientHeight;
+      content.forEach((item) => {
+        height += item.clientHeight+100;  // 课程有的过少高度不够active样式会乱跳
         this.listHeight.push(height);
+        // console.log(this.listHeight);
       });
+
     },
     selectMenu(index) {
       let content = document.querySelectorAll(".content-wrapper .content-item");
       let el = content[index];
-      this.cscroll.scrollToElement(el, 300);
+      this.cscroll.scrollToElement(el, 300); // 设置滚动时间
     },
     toDetail(id) {
       this.$router.push({ name: "csdetail", params: { id: id } });
-    }
+    },
   },
   computed: {
     currentIndex() {
+      // console.log(this.listHeight);
       for (let i = 0; i < this.listHeight.length; i++) {
         let height1 = this.listHeight[i];
         let height2 = this.listHeight[i + 1];
+        // console.log(height1,height2);
         if (
           !height2 ||
           (this.scrollY >= height1 && this.scrollY <= height2 - 50)
@@ -124,11 +166,11 @@ export default {
         }
       }
       return 0;
-    }
+    },
   },
   components: {
-    "imooc-citem": citem
-  }
+    "imooc-citem": citem,
+  },
 };
 </script>
 

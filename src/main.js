@@ -25,6 +25,10 @@ Vue.prototype.$axios = axios
 axios.defaults.baseURL = 'http://mockjs.com/api' // 设置默认请求的url
 Vue.prototype.$http = axios
 
+//ElementUI的配置
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+Vue.use(ElementUI);
 
 Vue.config.productionTip = false
 

@@ -275,7 +275,7 @@ export default {
         })
         .then((response) => {
           this.newlist[3] = response.data.results;
-          console.log("计算机返回的课程", this.newlist[3]);
+          // console.log("计算机返回的课程", this.newlist[3]);
         })
         .catch(() => {
           this.$message({

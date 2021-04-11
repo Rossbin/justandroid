@@ -51,23 +51,23 @@ export default {
           url: "/index/home"
         },
         {
-          content: "课程",
+          content: "基础课程",
           url: "/index/course"
         },
+        // {
+        //   content: "课程",
+        //   url: "/index/path"
+        // },
         {
-          content: "路径",
-          url: "/index/path"
-        },
-        {
-          content: "实战",
+          content: "实战课程",
           url: "/index/coding"
         },
+        // {
+        //   content: "手记",
+        //   url: "/index/article"
+        // },
         {
-          content: "手记",
-          url: "/index/article"
-        },
-        {
-          content: "猿问",
+          content: "我的",
           url: "/index/wenda"
         }
       ]

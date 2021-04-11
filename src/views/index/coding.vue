@@ -1,66 +1,117 @@
 <template>
   <div class="path">
-
     <!-- 分类 -->
-    <ul class="type-list imooc-container imooc-flex">
-      <li class="type-item" v-for="(type, index) in typelist"
+    <!-- <ul class="type-list imooc-container imooc-flex">
+      <li
+        class="type-item"
+        v-for="(type, index) in general_category_list"
         :key="type.id"
-        :class="{'active': index === currActive}"
-        @click="changeType(index)">{{ type }}
+        :class="{ active: index === currActive }"
+        @click="changeType(index,type.id)"
+      >
+        {{ type.name }}
       </li>
-    </ul>
+    </ul> -->
 
     <!-- 课程列表 -->
-    <ul class="class-list">
-      <li class="class-item imooc-flex imooc-container" v-for="code in codelist" :key="code.id" @click="toClassDetail(code.id)">
-        <imooc-citem :course="code" width="10rem" height="7rem"></imooc-citem>
-      </li>
-    </ul>
-    
+    <div
+        v-for="(categroy, index) in general_category_list"
+        :key="index"
+    >
+      <ul class="class-list"
+        v-for="(type, index) in categroy.coursecategrories"
+        :key="index"
+      
+      >
+        <li
+          class="class-item imooc-flex imooc-container"
+          v-for="code in type.androidcourse_actual_list"
+          :key="code.id"
+          @click="toClassDetail(code.id)"
+        >
+          <imooc-citem :course="code" width="14rem" height="8rem"></imooc-citem>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
-import citem from "@/components/citem";
+import citem from "@/components/citemTwo";
 export default {
   data() {
     return {
-      typelist: [
-        "全部",
-        "前沿技术",
-        "前端开发",
-        "后端开发",
-        "移动开发",
-        "算法&数学",
-        "云计算&大数据",
-        "人工智能"
-      ],
-      currActive: 0,
-      codelist: []
+      general_category_list: [],
+      // filter:{
+      //   course_category: '0',
+      // },
+      // course_list:[],
+
+      // currActive: 0,
+      // codelist: [],
     };
   },
   created() {
-    this.getPathData();
+    this.get_general();
+
   },
   methods: {
-    getPathData() {
-      this.$http.get("/codeData").then(res => {
-        console.log(res);
-        let data = res.data.data;
-        this.codelist = data.codelist;
-      });
+    // 总目录
+    get_general() {
+      // 获取课程分类信息
+      let filters = {
+        project: "1",
+      };
+      this.$axios
+        .get("http://127.0.0.1:8000/course/androidcourse/", {
+          params: filters,
+        })
+        .then((response) => {
+          this.general_category_list = response.data;
+          // console.log(this.general_category_list);
+        })
+        .catch(() => {
+          this.$message({
+            message: "获取总目录分类信息有误，请联系客服工作人员",
+          });
+        });
     },
-    changeType(index) {
-      this.currActive = index;
-      this.getPathData();
-    },
+    // changeType(index,key) {
+    //   this.currActive = index;
+    //   this.filter.course_category = key
+    //   console.log(this.filter.course_category);
+    //   this.get_course();
+    // },
     toClassDetail(id) {
       this.$router.push({ name: "cdetail", params: { id } });
-    }
+    },
+        // 课程
+    // get_course() {
+    //   // 排序
+    //   let filters = {
+    //     course_categor: this.filter.course_category
+    //   };
+    //   console.log(filters);
+
+    //   // 获取课程列表信息
+    //   this.$axios
+    //     .get('http://127.0.0.1:8000/course/actualcourse/', {
+    //       params: filters,
+    //     })
+    //     .then((response) => {
+    //       this.course_list = response.data;
+    //       console.log(this.course_list);
+    //     })
+    //     .catch(() => {
+    //       this.$message({
+    //         message: "获取课程信息有误，请联系客服工作人员",
+    //       });
+    //     });
+    // },
   },
   components: {
-    "imooc-citem": citem
-  }
+    "imooc-citem": citem,
+  },
 };
 </script>
 

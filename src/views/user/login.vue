@@ -22,9 +22,9 @@
       </div>
       <div class="btn register-btn" @click="login">登录</div>
     </div>
-    <p class="agreement text-center mt-10">登录/注册即视为同意<a href="https://www.baidu.com" class="cr-main">慕课网注册协议</a></p>
-    <p class="forget text-center" v-show="state == 2">忘记密码</p>
-    <p class="to-login text-center" v-show="state == 1" @click="state = 2">已有慕课网账号？去登录</p>
+    <p class="agreement text-center mt-10">登录/注册即视为同意<a href="https://www.baidu.com" class="cr-main">江科大在线教育注册协议</a></p>
+    <!-- <p class="forget text-center" v-show="state == 2">忘记密码</p> -->
+    <p class="to-login text-center" v-show="state == 1" @click="state = 2">已有江科大在线教育网账号？去登录</p>
     <p class="to-login text-center" v-show="state == 2" @click="state = 1">没有账号，去注册</p>
   </div>
 </template>
