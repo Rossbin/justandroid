@@ -29,7 +29,9 @@
           :key="code.id"
           @click="toClassDetail(code.id)"
         >
+
           <imooc-citem :course="code" width="14rem" height="8rem"></imooc-citem>
+          
         </li>
       </ul>
     </div>
@@ -63,7 +65,7 @@ export default {
         project: "1",
       };
       this.$axios
-        .get("http://127.0.0.1:8000/course/androidcourse/", {
+        .get(`${this.$settings.base_url}/course/androidcourse/`, {
           params: filters,
         })
         .then((response) => {
@@ -83,7 +85,7 @@ export default {
     //   this.get_course();
     // },
     toClassDetail(id) {
-      this.$router.push({ name: "cdetail", params: { id } });
+      this.$router.push({ name: "cdetail", params: { pk:id } });
     },
         // 课程
     // get_course() {

@@ -3,35 +3,44 @@
     <nav class="nav imooc-flex imooc-flex-between">
       <div class="info imooc-flex">
         <!-- 详情 -->
-        <div class="btn return-btn mr-10" @click="$router.back()" v-if="!isIndex">
+        <div
+          class="btn return-btn mr-10"
+          @click="$router.back()"
+          v-if="!isIndex"
+        >
           <span class="icon-return"></span>
         </div>
         <div class="title" v-if="!isIndex">{{ title }}</div>
         <!-- 主页 -->
         <div class="logo" v-if="isIndex">
-          <img src="@/public/images/head-logo.svg">
+          <img src="@/public/images/head-logo.svg" />
         </div>
       </div>
       <ul class="menu-list imooc-flex" v-if="!isCart">
         <!-- 详情 -->
-        <li class="menu-item cart-item" v-if="!isIndex" @click="toCart">
+        <!-- <li class="menu-item cart-item" v-if="!isIndex" @click="toCart">
           <span class="icon-cart">
             <span class="path1"></span><span class="path2"></span>
-          </span> 
-        </li>
+          </span>
+        </li> -->
         <!-- 主页 -->
         <li class="menu-item" v-if="isIndex" @click="toSearch">
           <span class="icon-search">
-            <span class="path1"></span><span class="path2"></span><span class="path3"></span>
-          </span> 
+            <span class="path1"></span><span class="path2"></span
+            ><span class="path3"></span>
+          </span>
         </li>
         <li class="menu-item">
           <!-- 未登录 -->
-          <span class="icon-head" v-if="!$store.state.userInfo" @click="toLogin"></span>
+          <span
+            class="icon-head"
+            v-if="!$store.state.userInfo"
+            @click="toLogin"
+          ></span>
           <!-- 已登录 -->
-          <span class="icon-people" v-else @click="toUser">
-            <span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span>
-          </span>
+          <span v-else @click="toUser">
+            <el-avatar :size="18" :src="$store.state.userInfo.icon"></el-avatar
+          ></span>
         </li>
       </ul>
     </nav>
@@ -48,11 +57,11 @@ export default {
       tablist: [
         {
           content: "首页",
-          url: "/index/home"
+          url: "/index/home",
         },
         {
           content: "基础课程",
-          url: "/index/course"
+          url: "/index/course",
         },
         // {
         //   content: "课程",
@@ -60,7 +69,7 @@ export default {
         // },
         {
           content: "实战课程",
-          url: "/index/coding"
+          url: "/index/coding",
         },
         // {
         //   content: "手记",
@@ -68,13 +77,13 @@ export default {
         // },
         {
           content: "我的",
-          url: "/index/wenda"
-        }
-      ]
+          url: "/index/wenda",
+        },
+      ],
     };
   },
   components: {
-    "imooc-tab": tab
+    "imooc-tab": tab,
   },
   computed: {
     isIndex() {
@@ -82,7 +91,7 @@ export default {
     },
     isCart() {
       return /cart/.test(this.$route.path);
-    }
+    },
   },
   methods: {
     toSearch() {
@@ -101,8 +110,8 @@ export default {
       } else {
         this.$router.push({ name: "login" });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

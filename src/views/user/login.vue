@@ -1,9 +1,9 @@
 <template>
   <div class="login">
     <imooc-return></imooc-return>
-    <div class="title">{{ title }}</div>
+    <!-- <div class="title">{{ title }}</div> -->
     <!-- 注册面板 -->
-    <div class="form-wrapper register-wrapper" v-show="state == 1">
+    <!-- <div class="form-wrapper register-wrapper" v-show="state == 1">
       <div class="input-line">
         <input type="text" placeholder="手机号" v-model="phone" pattern="\d*" @keydown.enter="register">
       </div>
@@ -11,9 +11,9 @@
         <input type="text" placeholder="请输入验证码" v-model="smscode" pattern="\d*" @keydown.enter="register">
       </div>
       <div class="btn register-btn" @click="register">下一步</div>
-    </div>
+    </div> -->
     <!-- 登录面板 -->
-    <div class="form-wrapper register-wrapper" v-show="state == 2">
+    <!-- <div class="form-wrapper register-wrapper" v-show="state == 2">
       <div class="input-line">
         <input type="text" placeholder="手机号/邮箱" v-model="username" @keydown.enter="login">
       </div>
@@ -21,29 +21,67 @@
         <input type="password" placeholder="密码" v-model="password" @keydown.enter="login">
       </div>
       <div class="btn register-btn" @click="login">登录</div>
-    </div>
-    <p class="agreement text-center mt-10">登录/注册即视为同意<a href="https://www.baidu.com" class="cr-main">江科大在线教育注册协议</a></p>
+    </div> -->
+    <!-- <p class="agreement text-center mt-10">登录/注册即视为同意<a href="https://www.baidu.com" class="cr-main">江科大在线教育注册协议</a></p> -->
     <!-- <p class="forget text-center" v-show="state == 2">忘记密码</p> -->
-    <p class="to-login text-center" v-show="state == 1" @click="state = 2">已有江科大在线教育网账号？去登录</p>
-    <p class="to-login text-center" v-show="state == 2" @click="state = 1">没有账号，去注册</p>
+    <!-- <p class="to-login text-center" v-show="state == 1" @click="state = 2">已有江科大在线教育网账号？去登录</p> -->
+
+    <Logins v-show="state == 2" @loginsuccess="login_success()"></Logins>
+
+    <Register v-show="state == 1" @go="put_login"></Register>
+    <p class="to-login text-center" v-show="state == 2" @click="state = 1">
+      没有账号，去注册
+    </p>
+    <p class="to-login text-center" v-show="state == 1" @click="state = 2">
+      立即登录
+    </p>
   </div>
 </template>
 
 <script>
 import back from "@/components/return";
+import Logins from "@/views/user/loging";
+import Register from "@/views/user/register";
 export default {
   data() {
     return {
       state: 2,
+      icon: "",
+      token: "",
+      id: "",
+      username: "",
+
       phone: "",
       smscode: "",
-      username: "13192733603",
+
       password: "123456",
       preg: /^[1][3,4,5,7,8][0-9]{9}$/,
-      ereg: /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/
+      ereg: /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/,
     };
   },
   methods: {
+    put_login() {
+      this.state = 2;
+    },
+    login_success() {
+      this.username = this.$cookies.get("username");
+      this.icon = this.$settings.base_url + this.$cookies.get("icon");
+      this.token = this.$cookies.get("token");
+      this.id = this.$cookies.get("id");
+
+      let userInfo = {
+        id: this.id,
+        username: this.username,
+        icon: this.icon,
+
+      };
+      this.$storage.set("userInfo", userInfo);
+      console.log(userInfo);
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 1000);
+      this.$toast.show("登录成功");
+    },
     register() {
       if (!this.phone) {
         this.$toast.show("请输入你的手机号");
@@ -75,23 +113,25 @@ export default {
     },
     setUserInfo() {
       let userInfo = {
-        id: 1,
-        username: this.username
+        id: this.id,
+        username: this.username,
       };
       this.$storage.set("userInfo", userInfo);
       setTimeout(() => {
         window.location.href = "/";
       }, 1000);
-    }
+    },
   },
   computed: {
     title() {
       return this.state == 1 ? "注册" : "登录";
-    }
+    },
   },
   components: {
-    "imooc-return": back
-  }
+    "imooc-return": back,
+    Logins,
+    Register,
+  },
 };
 </script>
 

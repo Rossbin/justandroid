@@ -13,7 +13,7 @@ let Wenda = resolve => require(['@/views/index/wenda'], resolve)
 // 详情
 let codeDetail = resolve => require(['@/views/detail/code'], resolve)
 let courseDetail = resolve => require(['@/views/detail/course'], resolve)
-let typeDetail = resolve => require(['@/views/detail/type'], resolve)
+// let typeDetail = resolve => require(['@/views/detail/type'], resolve)
 
 // 搜索
 let Search = resolve => require(['@/views/search/search'], resolve)
@@ -25,6 +25,7 @@ let Video = resolve => require(['@/views/video/video'], resolve)
 let User = resolve => require(['@/views/user/user'], resolve)
 let Login = resolve => require(['@/views/user/login'], resolve)
 let Cart = resolve => require(['@/views/user/cart'], resolve)
+
 
 Vue.use(Router)
 
@@ -62,7 +63,7 @@ let routes = [{
       path: '/index/coding',
       component: Coding,
       meta: {
-        title: '慕课网'
+        title: '实战课程'
       },
     },
     //  {
@@ -76,7 +77,7 @@ let routes = [{
       path: '/index/wenda',
       component: Wenda,
       meta: {
-        title: '慕课网'
+        title: '我的'
       },
     }]
   },
@@ -97,7 +98,7 @@ let routes = [{
     },
   },
   {
-    path: '/cdetail/:id',
+    path: '/cdetail/:pk',
     name: 'cdetail',
     component: codeDetail,
     meta: {
@@ -105,21 +106,21 @@ let routes = [{
     },
   },
   {
-    path: '/csdetail/:id',
+    path: '/csdetail/:pk',
     name: 'csdetail',
     component: courseDetail,
     meta: {
       title: '课程详情'
     },
   },
-  {
-    path: '/type/:id',
-    name: 'type',
-    component: typeDetail,
-    meta: {
-      title: '类型详情'
-    },
-  },
+  // {
+  //   path: '/type/:id',
+  //   name: 'type',
+  //   component: typeDetail,
+  //   meta: {
+  //     title: '类型详情'
+  //   },
+  // },
   {
     path: '/user/:id',
     name: 'user',
@@ -136,6 +137,7 @@ let routes = [{
       title: '登录'
     },
   },
+
   {
     path: '/cart',
     name: 'cart',

@@ -4,9 +4,15 @@
       <imooc-return></imooc-return>
       <div class="head">
         <!-- 头像 -->
-        <span class="avatar icon-people">
-          <span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span>
+        <span class="avatar icon-people" v-if="!$store.state.userInfo">
         </span>
+        <el-avatar v-else :size="80" :src="$store.state.userInfo.icon">
+          <span class="path1"></span><span class="path2"></span
+          ><span class="path3"></span><span class="path4"></span
+          ><span class="path5"></span><span class="path6"></span
+          ><span class="path7"></span><span class="path8"></span
+          ><span class="path9"></span>
+        </el-avatar>
 
         <!-- 账户名 -->
         <div class="username mt-10">{{ $store.state.userInfo.username }}</div>
@@ -27,13 +33,18 @@ export default {
         let userInfo = "";
         this.$storage.set("userInfo", "");
         this.$store.commit("set_userInfo", userInfo);
+        //清除cookie
+        this.$cookies.remove("token");
+        this.$cookies.remove("username");
+        this.$cookies.remove("icon");
+        this.$cookies.remove("id");
         window.location.href = "/";
       }
-    }
+    },
   },
   components: {
-    "imooc-return": back
-  }
+    "imooc-return": back,
+  },
 };
 </script>
 

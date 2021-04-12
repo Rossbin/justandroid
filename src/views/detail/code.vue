@@ -1,21 +1,21 @@
 <template>
   <div class="detail">
     <!-- 头部 -->
-    <imooc-header title="实战详情"></imooc-header>
+    <imooc-header title="课程详情"></imooc-header>
      
     <!-- 主要内容 -->
-    <div class="content" v-if="classData">
+    <div class="content" >
       <!-- 上部分信息 -->
       <div class="imooc-container">
         <!-- 标题 -->
-        <div class="title bold">{{ classData.title }}</div>
+        <div class="title bold">{{ course_info.name }}</div>
         <!-- 副标题 -->
-        <div class="content mb-10">{{ classData.content }}</div>
+        <div class="content mb-10">{{ course_info.brief }}</div>
         <!-- 价格 -->
         <div class="imooc-flex imooc-flex-between">
           <div class="money">
-            <div class="rel-money bold">&#165;{{ classData.money + '.00' }}</div>
-            <div class="old-money fz-small cr-basic">&#165;{{ classData.money + 50 + '.00' }}</div>
+            <div class="rel-money bold">&#165;{{ course_info.price  }}</div>
+            <!-- <div class="old-money fz-small cr-basic">&#165;{{ (course_info.price + 50)   }}</div> -->
           </div>
           <div class="btn play-btn bold" @click="showVideo">
             <span class="icon-play">
@@ -27,36 +27,43 @@
         <ul class="intro">
           <li class="intro-item imooc-flex">
             <div class="title bold">促销</div>
-            <div class="content">已支持支付宝花呗付款</div>
+            <div class="content">&nbsp;已支持支付宝付款</div>
           </li>
           <li class="intro-item imooc-flex">
-            <div class="title bold">参数</div>
-            <div class="content">难度&#8901;{{ intro.level }}&#8901;{{ intro.people }}人学&#8901;{{ intro.rate.toFixed(2) }}分</div>
+            <div class="title bold">热度</div>
+            <div class="content">&nbsp;{{ course_info.students }}已购买&#8901;</div>
           </li>
           <li class="intro-item imooc-flex">
-            <div class="title bold">套餐</div>
-            <div class="content">最高立省&#165;{{ intro.disccount }}，更多套餐有惊喜</div>
+            <div class="title bold">类型</div>
+            <div class="content">&nbsp;{{ course_info.level_name }}&nbsp;</div>
           </li>
           <li class="intro-item imooc-flex">
-            <div class="title bold">服务</div>
-            <div class="content">问答社区&#8901;源码开放&#8901;教辅材料&#8901;Git代码存储</div>
+            <div class="title bold">种类</div>
+            <div class="content">&nbsp;{{ course_info.project_name }}课程</div>
           </li>
         </ul>
       </div>
       <!-- 图片介绍 -->
       <ul class="image-list">
-        <li class="image-item" v-for="image in classData.imagelist" :key="image.id">
-          <img :src="image">
+        <li class="image-item" >
+          <img :src="course_info.course_img">
         </li>
       </ul>
       <!-- 章节 -->
       <div class="chapter imooc-container">
         <div class="title bold">章节</div>
         <ul class="chapter-list" :class="{'show-all': showAll}">
-          <li class="chapter-item" v-for="chapter in classData.chapterlist" :key="chapter.id">
-            <div class="title bold">{{ chapter.title }}</div>
-            <ul class="class-list cr-basic">
-              <li class="class-item" v-for="clas in chapter.classlist" :key="clas.id">{{ clas }}</li>
+          <li class="chapter-item" v-for="chapter in course_chapters" :key="chapter.id">
+            <div class="title bold">第{{
+                    chapter.chapter
+                  }}章·{{ chapter.name }}
+                  
+                  </div>
+                  <span style="font-size:10px">({{ chapter.summary }})</span>
+            <ul class="class-list cr-basic" >
+              <li class="class-item" v-for="(section,index) in chapter.coursesections" :key="section.name">{{ chapter.chapter }}-{{ index+1 }}&nbsp;{{ section.name }}
+                
+              </li>
             </ul>
           </li>
           <!-- 透明遮罩 -->
@@ -67,39 +74,39 @@
       </div>
       <!-- 教师 -->
       <div class="tacher has-line">
-        <imooc-teacher :teacher="classData.teacher"></imooc-teacher>
+        <imooc-teacher :teacher="course_info.teacher"></imooc-teacher>
       </div>
       <!-- 评分 -->
       <div class="rate imooc-container">
         <p>评价</p>
         <!-- 评分 -->
-        <div class="rate-container imooc-flex">
-          <div class="item bold">{{ classData.rate.rate[0].toFixed(2) }}</div>
+        <!-- <div class="rate-container imooc-flex">
+          <div class="item bold">7.74</div>
           <div class="item">
             <p class="bold">内容实用</p>
-            {{ classData.rate.rate[1].toFixed(2) }}
+            7.20
           </div>
           <div class="item">
             <p class="bold">通俗易懂</p>
-            {{ classData.rate.rate[2].toFixed(2) }}
+            7.17
           </div>
           <div class="item">
             <p class="bold">逻辑清晰</p>
-            {{ classData.rate.rate[3].toFixed(2) }}
+            8.89
           </div>
-        </div>
+        </div> -->
         <!-- 评论 -->
         <ul class="comment-list">
-          <li class="comment-item" v-for="comment in classData.rate.commentlist" :key="comment.id">
+          <li class="comment-item" v-for="comment in comment_port" :key="comment.id">
             <div class="info imooc-flex imooc-flex-between">
               <div class="left imooc-flex">
                 <div class="avatar mr-10">
-                  <img :src="comment.avatar" class="avatar">
+                  <img :src="$settings.base_url + '/media/' + comment.icon" class="avatar">
                 </div>
-                <div class="name bold">{{ comment.name }}</div>
+                <div class="name bold">{{ comment.first_name }}</div>
               </div>
               <div class="right">
-                <div class="rate cr-basic">{{ comment.rate.toFixed(2) }}分</div>
+                <div class="rate cr-basic">{{ comment.updated_time }}</div>
               </div>
             </div>
             <div class="comment">{{ comment.comment }}</div>
@@ -117,7 +124,7 @@
         </div>
       </div>
       <div class="buttons imooc-flex">
-        <div class="btn add-btn" @click="addToCar($event)">加入购物车</div>
+        <!-- <div class="btn add-btn" @click="addToCar($event)">加入购物车</div> -->
         <div class="btn buy-btn" @click="toPayPage">立即购买</div>
       </div>
     </div>
@@ -131,93 +138,179 @@ import teacher from "@/components/teacher";
 export default {
   data() {
     return {
-      classData: null,
-      intro: null,
-      showAll: false
+      course_id: '',
+      course_info: [],
+      course_chapters:[],
+      comment_port: [],
+      showAll: false,
+
+      // classData: null,
+      // intro: null,
+
     };
   },
   activated() {
-    this.getClassData();
+    // this.getClassData();
+    this.get_course_id();
+    this.get_course_data();
+    this.get_chapter();
+    this.get_comment();
     window.scrollTo(0, 0);
   },
+  // created(){
+  //   this.get_course_id();
+  //   this.get_course_data();
+  //   this.get_chapter();
+  // },
   methods: {
-    getClassData() {
-      // 这是课程id,由于这里都是随机生成的数据,传了也没又意义
-      let id = this.$route.params.id;
-      this.$http.get("/cdetail").then(res => {
-        console.log(res);
-        let data = res.data.data;
-        this.classData = data.classData;
-        this.intro = this.classData.intro;
-      });
+        // 获取评论
+    get_comment() {
+      // http://127.0.0.1:8000/user/comment/
+      this.tabIndex = 3;
+      let formData = new FormData();
+      formData.append("course", this.course_id);
+      this.$axios({
+        method: "post",
+        url: `${this.$settings.base_url}/user/comment/`,
+        data: formData,
+      })
+        .then((response) => {
+          if (response.data.code == "1") {
+            // console.log(response.data);
+            this.comment_port = response.data.data;
+          } else {
+            this.$message({
+              message: "该课程暂时还没有人评论哦！ 赶紧来占1楼吧",
+            });
+          }
+        })
+        .catch((error) => {});
     },
-    toPayPage() {
-      alert(
-        `购买课程《${this.classData.title}》,一共支付${this.classData.money}元`
-      );
+      get_chapter() {
+      // 获取当前课程对应的章节课时信息
+      // http://127.0.0.1:8000/course/chapters/?course=(pk)
+      this.$axios
+        .get(`${this.$settings.base_url}/course/chapters/`, {
+          params: {
+            course: this.course_id,
+          },
+        })
+        .then((response) => {
+          this.course_chapters = response.data;
+          // console.log('章节',this.course_chapters);
+        })
+        .catch((error) => {
+          window.console.log(error.response);
+        });
     },
-    addToCar(e) {
-      if (this.$store.state.userInfo) {
-        let data = this.classData;
-        let id = this.$route.params.id;
-
-        // 本课程的数据
-        let shop = {
-          id: id,
-          icon: data.icon,
-          title: data.title,
-          intro: data.content,
-          money: data.money
-        };
-
-        // 购物车的数据
-        let shopCartInfo = this.$storage.get("shopCartInfo");
-        shopCartInfo = shopCartInfo ? JSON.parse(shopCartInfo) : new Array();
-
-        // 将课程数据添加到购物车
-        shopCartInfo.push(shop);
-        this.$storage.set("shopCartInfo", shopCartInfo);
-        this.$store.commit("set_shopCartInfo", shopCartInfo);
-
-        // 小球丢进购物车动画
-        this.doAnimation(e);
-      } else {
-        this.$router.push({ name: "login" });
+      get_course_id() {
+      // 获取地址栏上面的课程ID
+      this.course_id = this.$route.params.pk || this.$route.query.pk;
+      // console.log(this.course_id);
+      if (this.course_id < 1) {
+        let _this = this;
+        _this.$alert("对不起，当前视频不存在！", "警告", {
+          callback() {
+            _this.$router.go(-1);
+          },
+        });
       }
     },
-    doAnimation(e) {
-      // 获取鼠标点击时的x,y坐标
-      let { pageX, pageY } = e;
-
-      // 获取购物车图标的x,y坐标
-      let cart = document.querySelector(".icon-cart");
-      let { x, y } = cart.getBoundingClientRect();
-
-      // 在鼠标点击处生成小球
-      let circle = document.createElement("span");
-      circle.className = "circle";
-      circle.style.cssText = `top: ${pageY}px; left: ${pageX}px`; // 初始化小球位置
-      document.body.appendChild(circle);
-
-      // 小球移动到购物车
-      setTimeout(() => {
-        circle.style.cssText = `top: ${y}px; left: ${x + 5}px`;
-
-        // 根据css设置的过渡时间移除小球、购物车做放大动画
-        setTimeout(() => {
-          circle.remove();
-          cart.classList.add("scale");
-          setTimeout(() => {
-            cart.classList.remove("scale");
-          }, 100);
-        }, 900);
-      }, 50);
+    get_course_data() {
+      // ajax请求课程信息
+      this.$axios
+        .get(`${this.$settings.base_url}/course/free/${this.course_id}/`)
+        .then((response) => {
+          // window.console.log(response.data);
+          this.course_info = response.data;
+          // console.log(this.course_info);
+        })
+        .catch(() => {
+          this.$message({
+            message: "对不起，访问页面出错！请联系客服工作人员！",
+          });
+        });
     },
+
+
+    // getClassData() {
+    //   // 这是课程id,由于这里都是随机生成的数据,传了也没又意义
+    //   let id = this.$route.params.id;
+    //   this.$http.get("/cdetail").then(res => {
+    //     console.log(res);
+    //     let data = res.data.data;
+    //     this.classData = data.classData;
+    //     this.intro = this.classData.intro;
+    //   });
+    // },
+    toPayPage() {
+      // alert(
+      //   `购买课程《${this.classData.title}》,一共支付${this.classData.money}元`
+      // );
+    },
+    // addToCar(e) {
+    //   if (this.$store.state.userInfo) {
+    //     let data = this.classData;
+    //     let id = this.$route.params.id;
+
+    //     // 本课程的数据
+    //     let shop = {
+    //       id: id,
+    //       icon: data.icon,
+    //       title: data.title,
+    //       intro: data.content,
+    //       money: data.money
+    //     };
+
+    //     // 购物车的数据
+    //     let shopCartInfo = this.$storage.get("shopCartInfo");
+    //     shopCartInfo = shopCartInfo ? JSON.parse(shopCartInfo) : new Array();
+
+    //     // 将课程数据添加到购物车
+    //     shopCartInfo.push(shop);
+    //     this.$storage.set("shopCartInfo", shopCartInfo);
+    //     this.$store.commit("set_shopCartInfo", shopCartInfo);
+
+    //     // 小球丢进购物车动画
+    //     this.doAnimation(e);
+    //   } else {
+    //     this.$router.push({ name: "login" });
+    //   }
+    // },
+    // doAnimation(e) {
+    //   // 获取鼠标点击时的x,y坐标
+    //   let { pageX, pageY } = e;
+
+    //   // 获取购物车图标的x,y坐标
+    //   let cart = document.querySelector(".icon-cart");
+    //   let { x, y } = cart.getBoundingClientRect();
+
+    //   // 在鼠标点击处生成小球
+    //   let circle = document.createElement("span");
+    //   circle.className = "circle";
+    //   circle.style.cssText = `top: ${pageY}px; left: ${pageX}px`; // 初始化小球位置
+    //   document.body.appendChild(circle);
+
+    //   // 小球移动到购物车
+    //   setTimeout(() => {
+    //     circle.style.cssText = `top: ${y}px; left: ${x + 5}px`;
+
+    //     // 根据css设置的过渡时间移除小球、购物车做放大动画
+    //     setTimeout(() => {
+    //       circle.remove();
+    //       cart.classList.add("scale");
+    //       setTimeout(() => {
+    //         cart.classList.remove("scale");
+    //       }, 100);
+    //     }, 900);
+    //   }, 50);
+    // },
     showVideo() {
       this.$router.push({
         name: "video",
         params: {
-          src: "https://v3.mukewang.com/shizhan/5b308443e520e529098b45b3/H.mp4"
+          // src: "https://v3.mukewang.com/shizhan/5b308443e520e529098b45b3/H.mp4"
+          src: this.course_info.attachment_path
         }
       });
     }

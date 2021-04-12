@@ -87,17 +87,17 @@
     </div>
 
     <!-- 猿问精选 -->
-    <div class="wenda imooc-container">
+    <!-- <div class="wenda imooc-container"> -->
       <!-- 头部 -->
-      <div class="head imooc-flex imooc-flex-between">
+      <!-- <div class="head imooc-flex imooc-flex-between">
         <div class="title">猿问精选</div>
         <div class="more-link">
           <router-link to="/" class="cr-basic">更多猿问</router-link>
         </div>
-      </div>
+      </div> -->
 
       <!-- 列表 -->
-      <ul class="wenda-list">
+      <!-- <ul class="wenda-list">
         <li class="wenda-item" v-for="wenda in wendalist" :key="wenda.id">
           <div class="title">
             <router-link to="/">{{ wenda.title }}</router-link>
@@ -106,8 +106,8 @@
             共{{ wenda.num }}个回答
           </div>
         </li>
-      </ul>
-    </div>
+      </ul> -->
+    <!-- </div> -->
   </div>
 </template>
 
@@ -157,7 +157,7 @@ export default {
     };
   },
   created() {
-    this.getHomeData();
+    // this.getHomeData();
     this.get_college_actualcourse();
     this.get_college_computer();
     this.get_college_language();
@@ -166,9 +166,9 @@ export default {
 
     //当banner组件一创建，就向后台发请求，拿回轮播图数据
     this.$axios
-      .get("http://127.0.0.1:8000/home/banner/")
+      .get(`${this.$settings.base_url}/home/banner/`)
       .then((response) => {
-        console.log("banner", response.data);
+        // console.log("banner", response.data);
         this.bannerlist = response.data;
       })
       .catch((error) => {});
@@ -182,7 +182,7 @@ export default {
 
       // 获取课程列表信息
       this.$axios
-        .get("http://127.0.0.1:8000/course/actualcourse/", {
+        .get(`${this.$settings.base_url}/course/actualcourse/`, {
           params: filters,
         })
         .then((response) => {
@@ -204,7 +204,7 @@ export default {
 
       // 获取课程列表信息
       this.$axios
-        .get("http://127.0.0.1:8000/course/popular/", {
+        .get(`${this.$settings.base_url}/course/popular/`, {
           params: filters,
         })
         .then((response) => {
@@ -226,7 +226,7 @@ export default {
 
       // 获取课程列表信息
       this.$axios
-        .get("http://127.0.0.1:8000/course/popular/", {
+        .get(`${this.$settings.base_url}/course/popular/`, {
           params: filters,
         })
         .then((response) => {
@@ -248,7 +248,7 @@ export default {
 
       // 获取课程列表信息
       this.$axios
-        .get("http://127.0.0.1:8000/course/popular/", {
+        .get(`${this.$settings.base_url}/course/popular/`, {
           params: filters,
         })
         .then((response) => {
@@ -270,7 +270,7 @@ export default {
 
       // 获取课程列表信息
       this.$axios
-        .get("http://127.0.0.1:8000/course/popular/", {
+        .get(`${this.$settings.base_url}/course/popular/`, {
           params: filters,
         })
         .then((response) => {
@@ -283,26 +283,22 @@ export default {
           });
         });
     },
-    getHomeData() {
-      this.$http.get("/homeData").then((res) => {
-        console.log(res);
-        let data = res.data.data;
-        // this.bannerlist = data.bannerlist;
-        // this.reclist = data.reclist;
-        // this.newlist = data.newlist;
-        this.wendalist = data.wendalist;
-      });
-    },
+    // getHomeData() {
+    //   this.$http.get("/homeData").then((res) => {
+    //     console.log(res);
+    //     let data = res.data.data;
+    //     // this.bannerlist = data.bannerlist;
+    //     // this.reclist = data.reclist;
+    //     // this.newlist = data.newlist;
+    //     this.wendalist = data.wendalist;
+    //   });
+    // },
     toClassDetail(id) {
       this.$router.push({ name: "cdetail", params: { id } });
     },
   },
   computed: {
-    // cNewList() {
-    //   let list = this.newlist;
-    //   let result = sliceArray(list, 3);
-    //   return result;
-    // },
+
   },
   components: {
     swiper,

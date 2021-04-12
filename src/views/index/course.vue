@@ -28,21 +28,18 @@
           <ul
             class="type-list imooc-flex"
             v-if="course.coursecategrories.length"
-          >
-          </ul>
-
-
+          ></ul>
 
           <ul
-            class="course-list "
+            class="course-list"
             v-for="(coursecate, index) in course.coursecategrories"
             :key="index"
           >
             <li
               class="course-item imooc-flex"
-              v-for="(courses, index) in coursecate.androidcourse_base_list"
+              v-for="courses in coursecate.androidcourse_base_list"
               :key="courses.id"
-              @click="toDetail(index)"
+              @click="toDetail(courses.id)"
             >
               <imooc-citem :course="courses" width="10rem"></imooc-citem>
             </li>
@@ -60,7 +57,7 @@ export default {
   data() {
     return {
       general_category_list: [],
-      courselist: [],
+
       mscroll: null,
       cscroll: null,
       scrollY: 0,
@@ -69,25 +66,24 @@ export default {
   },
   created() {
     this.get_general();
-    this.getCourseData();
   },
   mounted() {
     this.initBetterScroll();
   },
-  activated() {
-    // 移除index的padding-bottom
-    document.querySelector(".index").classList.remove("haspadding");
-  },
-  deactivated() {
-    // 加上index的padding-bottom
-    document.querySelector(".index").classList.add("haspadding");
-  },
+  // activated() {
+  //   // 移除index的padding-bottom
+  //   document.querySelector(".index").classList.remove("haspadding");
+  // },
+  // deactivated() {
+  //   // 加上index的padding-bottom
+  //   document.querySelector(".index").classList.add("haspadding");
+  // },
   methods: {
     // 总目录
     get_general() {
       // 获取课程分类信息
       this.$axios
-        .get("http://127.0.0.1:8000/course/androidcourse/")
+        .get(`${this.$settings.base_url}/course/androidcourse/`)
         .then((response) => {
           this.general_category_list = response.data;
           // console.log(this.general_category_list);
@@ -99,13 +95,6 @@ export default {
         });
     },
 
-    getCourseData() {
-      this.$http.get("/courseData").then((res) => {
-        console.log(res);
-        let data = res.data.data;
-        this.courselist = data.courselist;
-      });
-    },
     initBetterScroll() {
       this.$nextTick(function () {
         setTimeout(() => {
@@ -120,13 +109,11 @@ export default {
           // 监听内容区的滚动
           this.cscroll.on("scroll", (pos) => {
             this.scrollY = Math.abs(Math.round(pos.y));
-
           });
 
           // 计算高度
           this.caclHeight();
-
-        }, 2000);
+        }, 4000);
       });
     },
     caclHeight() {
@@ -136,11 +123,10 @@ export default {
 
       this.listHeight.push(height);
       content.forEach((item) => {
-        height += item.clientHeight+100;  // 课程有的过少高度不够active样式会乱跳
+        height += item.clientHeight ; // 课程有的过少高度不够active样式会乱跳
         this.listHeight.push(height);
         // console.log(this.listHeight);
       });
-
     },
     selectMenu(index) {
       let content = document.querySelectorAll(".content-wrapper .content-item");
@@ -148,7 +134,7 @@ export default {
       this.cscroll.scrollToElement(el, 300); // 设置滚动时间
     },
     toDetail(id) {
-      this.$router.push({ name: "csdetail", params: { id: id } });
+      this.$router.push({ name: "cdetail", params: { pk:id } });
     },
   },
   computed: {
@@ -193,7 +179,7 @@ export default {
     font-size: 1.2rem;
     li {
       width: 100%;
-      height: 6rem;
+      height: 5rem;
       padding: 0 1rem;
       border-bottom: 0.1rem solid #ebebeb;
       &:last-child {

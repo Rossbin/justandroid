@@ -3,11 +3,12 @@
     <p class="bold">讲师</p>
     <div class="item imooc-flex imooc-container">
       <div class="avatar mr-10">
-        <img :src="teacher.avatar" class="avatar">
+        <img :src="teacher.image" class="avatar">
       </div>
       <div class="info imooc-flex imooc-flex-column imooc-flex-between">
         <div class="name bold">{{ teacher.name }}</div>
-        <div class="type cr-basic">{{ teacher.type }}</div>
+        <div class="type cr-basic">{{ teacher.brief }}</div>
+        <div class="type cr-basic">导师签名：{{ teacher.signature }}</div>
       </div>
     </div>
   </div>
