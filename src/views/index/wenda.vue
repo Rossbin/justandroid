@@ -66,6 +66,22 @@ export default {
       myOrderList: "",
     };
   },
+
+    // 以下触发的时间早，组件都还没加载出来
+  beforeRouteEnter(to, from, next) {
+    // console.log("局部盘查");
+    next((vm) => {
+      if (!vm.$cookies.get("token")) {
+        vm.$message({
+          message: "您还没有登录，请先登录",
+
+        });
+        next("/login");
+      } else {
+        next();
+      }
+    });
+  },
   activated() {
     this.get_course();
   },

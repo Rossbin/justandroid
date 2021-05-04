@@ -6,7 +6,7 @@
         <img src="@/public/images/default_img.jpg" alt v-else />
       </div>
       
-      <div class="user_edit">
+      <div class="user_edit" v-if="userInfo">
         <div>
           <p>
             
@@ -38,7 +38,7 @@
       </div>
     </div>
     <div>
-      <h2 style="margin-left:30px">{{$store.state.userInfo.username}}</h2>
+      <h2 style="margin-left:30px" v-if="userInfo">{{$store.state.userInfo.username}}</h2>
       <p v-if="userInfo.signature">{{userInfo.signature}}</p>
       <p v-else>这个人很神秘，什么都没有写</p>
     </div>
@@ -47,7 +47,22 @@
 
 <script>
 export default {
-    props:['userInfo']
+  props:['userInfo'],
+  // 以下触发的时间早，组件都还没加载出来
+  beforeRouteEnter(to, from, next) {
+    // console.log("局部盘查");
+    next((vm) => {
+      if (!vm.$cookies.get("token")) {
+        vm.$message({
+          message: "您还没有登录，请先登录",
+
+        });
+        next("/login");
+      } else {
+        next();
+      }
+    });
+  },
 };
 </script>
 

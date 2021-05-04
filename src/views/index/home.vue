@@ -3,8 +3,8 @@
     <!-- 轮播图 -->
     <div class="banner">
       <swiper :options="boptions" ref="mySwiper" v-if="bannerlist.length != 0">
-        <swiper-slide v-for="(banner, index) in bannerlist" :key="banner.id">
-          <img :src="banner.img" @click="toClassDetail(index)" />
+        <swiper-slide v-for="banner in bannerlist" :key="banner.id">
+          <img :src="banner.img" @click="toClassDetail(banner.link)" />
         </swiper-slide>
         <div
           class="swiper-pagination swiper-pagination-white"
@@ -294,7 +294,7 @@ export default {
     //   });
     // },
     toClassDetail(id) {
-      this.$router.push({ name: "cdetail", params: { id } });
+      this.$router.push({ name: "cdetail", params: { pk:id } });
     },
   },
   computed: {

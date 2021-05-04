@@ -37,13 +37,13 @@ let routes = [{
     component: Index,
     redirect: '/index/home',
     meta: {
-      title: '慕课网'
+      title: 'JUST慕课网'
     },
     children: [{
       path: '/index/home',
       component: Home,
       meta: {
-        title: '慕课网'
+        title: 'JUST慕课网'
       },
     }, {
       path: '/index/course',
